@@ -1,0 +1,10 @@
+*.tmp
+*.dll
+*.exe
+*.ini
+.DS_Store
+Desktop.ini
+/build/
+/dist/
+/out/
+/bin/
