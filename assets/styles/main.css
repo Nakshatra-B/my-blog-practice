@@ -1,3 +1,7 @@
+body {
+  background-color: Canvas;
+  color: CanvasText;
+  color-scheme: light dark;
 .button {
   background-color: #04AA6D;
   border: none;
