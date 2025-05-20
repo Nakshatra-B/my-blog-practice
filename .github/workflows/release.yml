@@ -1,12 +1,32 @@
-name: Auto-Tag Release
+name: Release with Version Bump
+
 on:
   push:
     branches: [ main ]
+    paths:
+      - 'package.json'  # for Node.js, or
+      - 'pyproject.toml'  # for Python projects
+
 jobs:
-  tag:
+  build:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: Klemensas/action-autotag@stable
-        with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - uses: actions/checkout@v4
+      with:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN_ACTION }}
+
+    - name: Bump version (Node.js)
+      if: success() && github.event.head_commit.message != 'Version bump'
+      run: |
+        npm install  # Make sure dependencies are installed
+        npm version patch -m "Bump version to %s"  # Bump version (patch)
+
+    - name: Bump version (Python)
+      if: success() && github.event.head_commit.message != 'Version bump'
+      run: |
+        pip install bump2version
+        bump2version patch  # Bump version (patch)
+
+    - name: Push changes and tags
+      run: git push --follow-tags
